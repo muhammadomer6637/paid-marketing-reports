@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Add this week's numbers</title>
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.46.0/dist/tabler-icons.min.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand"><img src="assets/mul-logo.png" alt="Minhaj University Lahore" class="brand-logo">&nbsp;Paid marketing report</div>
+    <nav>
+      <a class="btn" href="index.html"><i class="ti ti-arrow-left"></i> Back to dashboard</a>
+    </nav>
+  </div>
+
+  <div class="page">
+    <div id="tabs" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:1.25rem;"></div>
+    <div id="add-channel-row" style="margin-bottom:1.25rem;"></div>
+
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:0.5rem;flex-wrap:wrap;">
+      <label style="font-size:13px;color:var(--text-secondary);">As of date <input id="date-input" type="date" style="margin-left:6px;"></label>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin:0 0 1.5rem;">Enter the running total <strong>since the campaign started</strong>, up to this date &mdash; not just this week's activity. Use a past date to backfill an earlier report.</p>
+
+    <div id="metric-form" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:1.25rem;"></div>
+
+    <div style="display:flex;gap:10px;margin-bottom:2.5rem;">
+      <button class="btn primary" id="save-btn"><i class="ti ti-device-floppy"></i> Save this week</button>
+      <span id="save-msg" style="align-self:center;font-size:13px;color:var(--text-success);"></span>
+    </div>
+
+    <div style="border-top:0.5px solid var(--border);padding-top:1.25rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <h3 style="font-size:15px;margin:0;">Manage fields for this channel</h3>
+        <button class="btn" id="remove-channel-btn" style="color:var(--text-danger);"><i class="ti ti-trash"></i> Remove this channel</button>
+      </div>
+      <div id="field-list" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input id="new-field-label" type="text" placeholder="Metric name, e.g. Leads" style="min-width:160px;">
+        <select id="new-field-unit">
+          <option value="">Number</option>
+          <option value="PKR">Currency (PKR)</option>
+          <option value="%">Percent</option>
+        </select>
+        <button class="btn" id="add-field-btn"><i class="ti ti-plus"></i> Add field</button>
+      </div>
+    </div>
+
+    <div style="border-top:0.5px solid var(--border);padding-top:1.25rem;margin-top:1.25rem;">
+      <h3 style="font-size:15px;margin:0 0 10px;">Reorder channels</h3>
+      <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;">This is the order slides appear in on the dashboard.</p>
+      <div id="reorder-list" style="display:flex;flex-direction:column;gap:6px;max-width:340px;"></div>
+    </div>
+  </div>
+
+<script src="entry.js"></script>
+</body>
+</html>

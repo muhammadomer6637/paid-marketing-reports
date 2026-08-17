@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "paid-marketing-reports",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["start"],
+      "port": 4100
+    }
+  ]
+}

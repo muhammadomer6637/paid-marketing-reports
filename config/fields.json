@@ -1,0 +1,217 @@
+{
+  "fbig": {
+    "label": "Facebook & Instagram",
+    "icon": "ti-brand-facebook",
+    "accent": "#7f77dd",
+    "metrics": [
+      {
+        "key": "reach",
+        "label": "Reach",
+        "icon": "ti-users",
+        "unit": "",
+        "hero": true
+      },
+      {
+        "key": "impressions",
+        "label": "Impressions",
+        "icon": "ti-eye",
+        "unit": ""
+      },
+      {
+        "key": "video_views",
+        "label": "Video views",
+        "icon": "ti-player-play",
+        "unit": ""
+      },
+      {
+        "key": "clicks",
+        "label": "Clicks",
+        "icon": "ti-click",
+        "unit": ""
+      },
+      {
+        "key": "spent",
+        "label": "Amount spent",
+        "icon": "ti-currency-dollar",
+        "unit": "PKR"
+      }
+    ]
+  },
+  "google": {
+    "label": "Google search",
+    "icon": "ti-brand-google",
+    "accent": "#1d9e75",
+    "metrics": [
+      {
+        "key": "impressions",
+        "label": "Impressions",
+        "icon": "ti-eye",
+        "unit": "",
+        "hero": true
+      },
+      {
+        "key": "clicks",
+        "label": "Clicks",
+        "icon": "ti-click",
+        "unit": ""
+      },
+      {
+        "key": "ctr",
+        "label": "CTR",
+        "icon": "ti-percentage",
+        "unit": "%"
+      },
+      {
+        "key": "spent",
+        "label": "Amount spent",
+        "icon": "ti-currency-dollar",
+        "unit": "PKR"
+      }
+    ]
+  },
+  "youtube": {
+    "label": "YouTube",
+    "icon": "ti-brand-youtube",
+    "accent": "#d85a30",
+    "metrics": [
+      {
+        "key": "impressions",
+        "label": "Impressions",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "views",
+        "label": "Views",
+        "icon": "ti-player-play",
+        "unit": "",
+        "hero": true
+      },
+      {
+        "key": "clicks",
+        "label": "Clicks",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "spent",
+        "label": "Amount spent",
+        "icon": "ti-currency-dollar",
+        "unit": "PKR"
+      }
+    ]
+  },
+  "google_performance_max": {
+    "label": "Google Performance Max",
+    "icon": "ti-brand-google",
+    "accent": "#378add",
+    "metrics": [
+      {
+        "key": "impressions",
+        "label": "Impressions",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "clicks",
+        "label": "Clicks",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "ctr",
+        "label": "CTR",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "amount_spent",
+        "label": "Amount Spent",
+        "icon": "ti-chart-line",
+        "unit": ""
+      }
+    ]
+  },
+  "whatsapp": {
+    "label": "WhatsApp",
+    "icon": "ti-brand-whatsapp",
+    "accent": "#ba7517",
+    "metrics": [
+      {
+        "key": "total_conversations",
+        "label": "Total Conversations",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "chat_requests",
+        "label": "Chat Requests",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "callback_requests",
+        "label": "Callback Requests",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "satisfaction_rate",
+        "label": "Satisfaction Rate",
+        "icon": "ti-chart-line",
+        "unit": ""
+      }
+    ]
+  },
+  "facebook_leads": {
+    "label": "Facebook Leads",
+    "icon": "ti-brand-facebook",
+    "accent": "#639922",
+    "metrics": [
+      {
+        "key": "pharm_d",
+        "label": "Pharm D",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "llb",
+        "label": "LLB",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "ph_d_all_programs",
+        "label": "Ph.D. (All Programs)",
+        "icon": "ti-chart-line",
+        "unit": ""
+      }
+    ]
+  },
+  "website": {
+    "label": "Website (Google Analytics)",
+    "icon": "ti-world",
+    "accent": "#d4537e",
+    "metrics": [
+      {
+        "key": "users",
+        "label": "Users",
+        "icon": "ti-users",
+        "unit": "",
+        "hero": true
+      },
+      {
+        "key": "pages_views",
+        "label": "Pages Views",
+        "icon": "ti-chart-line",
+        "unit": ""
+      },
+      {
+        "key": "returning_users",
+        "label": "Returning users",
+        "icon": "ti-chart-line",
+        "unit": ""
+      }
+    ]
+  }
+}
