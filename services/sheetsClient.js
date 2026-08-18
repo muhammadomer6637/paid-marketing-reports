@@ -9,6 +9,12 @@ const HEADER = ["date", "logged_at", "platform", "metric_key", "metric_label", "
 let sheetsApi = null;
 let authEmail = "(unknown)";
 
+// A pasted-in env var can pick up an invisible trailing newline/space —
+// strip it so a byte-for-byte-perfect copy isn't required.
+function getSpreadsheetId() {
+  return (process.env.SPREADSHEET_ID || "").trim();
+}
+
 async function getClient() {
   if (sheetsApi) return sheetsApi;
   // On a host with no local disk to keep the key file on, paste the whole
@@ -17,11 +23,12 @@ async function getClient() {
   if (process.env.GOOGLE_CREDENTIALS_JSON) {
     let creds;
     try {
-      creds = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
+      creds = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON.trim());
     } catch (err) {
       console.error("GOOGLE_CREDENTIALS_JSON is not valid JSON:", err.message);
       throw err;
     }
+    if (creds.client_email) creds.client_email = creds.client_email.trim();
     authOptions.credentials = creds;
     authEmail = creds.client_email || "(credentials JSON has no client_email)";
   } else {
@@ -52,7 +59,7 @@ async function ensureSheetExists(sheets, spreadsheetId) {
     meta = await sheets.spreadsheets.get({ spreadsheetId });
   } catch (err) {
     console.error("Google Sheets access failed.");
-    console.error("  spreadsheetId used:", JSON.stringify(spreadsheetId));
+    console.error("  spreadsheetId used:", JSON.stringify(spreadsheetId), "length:", spreadsheetId.length);
     console.error("  service account email:", authEmail);
     console.error("  Google error:", err.response ? JSON.stringify(err.response.data) : err.message);
     throw err;
@@ -83,7 +90,7 @@ async function ensureHeader(sheets, spreadsheetId) {
 }
 
 async function getAllRows() {
-  const spreadsheetId = process.env.SPREADSHEET_ID;
+  const spreadsheetId = getSpreadsheetId();
   const sheets = await getClient();
   await ensureHeader(sheets, spreadsheetId);
   const res = await sheets.spreadsheets.values.get({
@@ -95,7 +102,7 @@ async function getAllRows() {
 }
 
 async function appendRows(rows) {
-  const spreadsheetId = process.env.SPREADSHEET_ID;
+  const spreadsheetId = getSpreadsheetId();
   const sheets = await getClient();
   await ensureHeader(sheets, spreadsheetId);
   await sheets.spreadsheets.values.append({
@@ -108,7 +115,7 @@ async function appendRows(rows) {
 }
 
 async function overwriteRows(rows) {
-  const spreadsheetId = process.env.SPREADSHEET_ID;
+  const spreadsheetId = getSpreadsheetId();
   const sheets = await getClient();
   await sheets.spreadsheets.values.clear({
     spreadsheetId,
