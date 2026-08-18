@@ -7,6 +7,7 @@ const SHEET_NAME = "Reports";
 const HEADER = ["date", "logged_at", "platform", "metric_key", "metric_label", "unit", "value"];
 
 let sheetsApi = null;
+let authEmail = "(unknown)";
 
 async function getClient() {
   if (sheetsApi) return sheetsApi;
@@ -14,9 +15,18 @@ async function getClient() {
   // JSON key into GOOGLE_CREDENTIALS_JSON instead — that takes priority.
   const authOptions = { scopes: ["https://www.googleapis.com/auth/spreadsheets"] };
   if (process.env.GOOGLE_CREDENTIALS_JSON) {
-    authOptions.credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
+    let creds;
+    try {
+      creds = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
+    } catch (err) {
+      console.error("GOOGLE_CREDENTIALS_JSON is not valid JSON:", err.message);
+      throw err;
+    }
+    authOptions.credentials = creds;
+    authEmail = creds.client_email || "(credentials JSON has no client_email)";
   } else {
     authOptions.keyFile = process.env.GOOGLE_KEY_FILE || path.join(__dirname, "..", "service-account.json");
+    authEmail = "(from key file: " + authOptions.keyFile + ")";
   }
   const auth = new google.auth.GoogleAuth(authOptions);
   sheetsApi = google.sheets({ version: "v4", auth });
@@ -37,7 +47,16 @@ function arrayToRow(arr) {
 }
 
 async function ensureSheetExists(sheets, spreadsheetId) {
-  const meta = await sheets.spreadsheets.get({ spreadsheetId });
+  let meta;
+  try {
+    meta = await sheets.spreadsheets.get({ spreadsheetId });
+  } catch (err) {
+    console.error("Google Sheets access failed.");
+    console.error("  spreadsheetId used:", JSON.stringify(spreadsheetId));
+    console.error("  service account email:", authEmail);
+    console.error("  Google error:", err.response ? JSON.stringify(err.response.data) : err.message);
+    throw err;
+  }
   const exists = (meta.data.sheets || []).some((s) => s.properties.title === SHEET_NAME);
   if (!exists) {
     await sheets.spreadsheets.batchUpdate({
