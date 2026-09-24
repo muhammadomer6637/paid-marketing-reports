@@ -36,6 +36,17 @@ function fmtCompact(m, val) {
   if (abs >= 1000) return prefix + (val / 1000).toFixed(abs / 1000 >= 100 ? 0 : 1) + "K";
   return prefix + Math.round(val).toLocaleString();
 }
+// Writes a compact number into el, with the currency prefix ("PKR") in a
+// smaller span so only the figure itself is large.
+function setCompact(el, m, val) {
+  const full = fmtCompact(m, val);
+  const prefix = m.unit && m.unit !== "%" ? m.unit + " " : "";
+  if (prefix && full.startsWith(prefix)) {
+    el.innerHTML = '<span class="num-unit">' + prefix + "</span>" + full.slice(prefix.length);
+  } else {
+    el.textContent = full;
+  }
+}
 function fmtDate(d) {
   return new Date(d + "T00:00:00").toLocaleDateString(undefined, { day: "numeric", month: "short" });
 }
@@ -50,7 +61,7 @@ function animateValue(el, target, m, duration) {
     if (!startTime) startTime = ts;
     const progress = Math.min((ts - startTime) / duration, 1);
     const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = fmtCompact(m, target * eased);
+    setCompact(el, m, target * eased);
     if (progress < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
@@ -161,8 +172,8 @@ function buildSlideHTML(p, history) {
       return `<div class="metric-pick reveal-item" data-metric-key="${m.key}" style="position:relative;cursor:pointer;background:var(--surface-2);border:0.5px solid var(--border);border-radius:var(--radius);padding:0.85rem;animation-delay:${(i + 1) * 90}ms;">
         <i class="ti ${m.icon}" style="font-size:16px;color:${p.accent};" aria-hidden="true"></i>
         <p style="font-size:12px;color:var(--text-secondary);margin:6px 0 3px;">${m.label}</p>
-        <p style="font-size:19px;font-weight:600;margin:0;" data-sec="${m.key}">0</p>
-        ${delta !== null ? `<p style="font-size:11px;margin:3px 0 0;color:${deltaColor(m, delta)};display:flex;align-items:center;gap:2px;"><i class="ti ${delta >= 0 ? "ti-arrow-up-right" : "ti-arrow-down-right"}" aria-hidden="true"></i>${Math.abs(delta).toFixed(1)}% vs last report</p>` : `<p style="font-size:11px;margin:3px 0 0;color:var(--text-muted);">no prior report</p>`}
+        <p style="font-size:44px;font-weight:600;line-height:1.1;margin:2px 0 0;" data-sec="${m.key}">0</p>
+        ${delta !== null ? `<p title="vs last report" style="font-size:15px;margin:3px 0 0;color:${deltaColor(m, delta)};display:flex;align-items:center;gap:2px;"><i class="ti ${delta >= 0 ? "ti-arrow-up-right" : "ti-arrow-down-right"}" aria-hidden="true"></i>${Math.abs(delta).toFixed(1)}%</p>` : `<p style="font-size:12px;margin:3px 0 0;color:var(--text-muted);">no prior report</p>`}
       </div>`;
     })
     .join("");
@@ -176,11 +187,11 @@ function buildSlideHTML(p, history) {
     </div>
     <div style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:1.75rem;align-items:end;margin-bottom:1.5rem;">
       <div class="metric-pick reveal-item" data-metric-key="${hero.key}" style="cursor:pointer;border-radius:var(--radius);padding:6px 10px;margin:-6px -10px;animation-delay:20ms;"><p style="font-size:13px;color:var(--text-secondary);margin:0 0 2px;display:flex;align-items:center;gap:6px;"><i class="ti ${hero.icon}" style="font-size:14px;color:${p.accent};" aria-hidden="true"></i>${hero.label} (cumulative)</p>
-      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;"><span style="font-family:var(--font-voice);font-size:48px;font-weight:500;font-variant-numeric:tabular-nums;" id="hero-val">0</span>
-      ${heroDelta !== null ? `<span style="font-size:13px;padding:2px 8px;border-radius:var(--radius);background:${hexToRgba(p.accent, 0.12)};color:${deltaColor(hero, heroDelta)};display:inline-flex;align-items:center;gap:2px;"><i class="ti ${heroDelta >= 0 ? "ti-arrow-up-right" : "ti-arrow-down-right"}" aria-hidden="true"></i>${Math.abs(heroDelta).toFixed(1)}% vs last report</span>` : ""}</div></div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;"><span style="font-family:var(--font-voice);font-size:96px;line-height:1.1;font-weight:500;font-variant-numeric:tabular-nums;" id="hero-val">0</span>
+      ${heroDelta !== null ? `<span style="font-size:15px;padding:2px 8px;border-radius:var(--radius);background:${hexToRgba(p.accent, 0.12)};color:${deltaColor(hero, heroDelta)};display:inline-flex;align-items:center;gap:2px;"><i class="ti ${heroDelta >= 0 ? "ti-arrow-up-right" : "ti-arrow-down-right"}" aria-hidden="true"></i>${Math.abs(heroDelta).toFixed(1)}% vs last report</span>` : ""}</div></div>
       <div style="position:relative;height:56px;"><canvas id="sparkline" role="img" aria-label="Cumulative trend for ${hero.label}"></canvas></div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.75rem;">${secondaryHTML}</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:1.75rem;">${secondaryHTML}</div>
     <p style="font-size:11px;color:var(--text-muted);margin:-1.25rem 0 1rem;">Tap a number above to compare it below</p>
     <div style="border-top:0.5px solid var(--border);padding-top:1.1rem;">
       <div style="margin-bottom:0.6rem;"><span style="font-size:12px;color:var(--text-secondary);">Same date, last 3 years &mdash; </span><span id="compare-metric-name" style="font-size:12px;font-weight:600;"></span></div>
@@ -208,7 +219,7 @@ function buildSummaryHTML(summary) {
       (t, i) => `<div class="reveal-item" style="background:var(--surface-2);border:0.5px solid var(--border);border-radius:var(--radius);padding:0.85rem;animation-delay:${(i + 1) * 90}ms;">
         <i class="ti ${t.icon}" style="font-size:16px;color:${SUMMARY_ACCENT};" aria-hidden="true"></i>
         <p style="font-size:12px;color:var(--text-secondary);margin:6px 0 3px;">${t.label}</p>
-        <p style="font-size:19px;font-weight:600;margin:0;" data-summary="${t.m.key}">0</p>
+        <p style="font-size:44px;font-weight:600;line-height:1.1;margin:2px 0 0;" data-summary="${t.m.key}">0</p>
       </div>`
     )
     .join("");
@@ -222,14 +233,14 @@ function buildSummaryHTML(summary) {
     </div>
     <div class="reveal-item" style="margin-bottom:1.5rem;animation-delay:20ms;">
       <p style="font-size:13px;color:var(--text-secondary);margin:0 0 2px;display:flex;align-items:center;gap:6px;"><i class="ti ti-currency-dollar" style="font-size:14px;color:${SUMMARY_ACCENT};" aria-hidden="true"></i>Total amount spent</p>
-      <span style="font-family:var(--font-voice);font-size:48px;font-weight:500;font-variant-numeric:tabular-nums;" data-summary="spent">0</span>
+      <span style="font-family:var(--font-voice);font-size:96px;line-height:1.1;font-weight:500;font-variant-numeric:tabular-nums;" data-summary="spent">0</span>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:1.75rem;">${tilesHTML}</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:1.75rem;">${tilesHTML}</div>
     <div class="reveal-item" style="animation-delay:${(tiles.length + 1) * 90}ms;border-top:0.5px solid var(--border);padding-top:1.25rem;">
       <div style="background:${hexToRgba(SUMMARY_ACCENT, 0.1)};border:0.5px solid ${SUMMARY_ACCENT};border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
         <div><p style="font-size:13px;color:var(--text-secondary);margin:0 0 2px;display:flex;align-items:center;gap:6px;"><i class="ti ti-receipt-2" style="font-size:14px;color:${SUMMARY_ACCENT};" aria-hidden="true"></i>Total spent, including 25% tax</p>
         <p style="font-size:11px;color:var(--text-muted);margin:0;">Total spent &times; 1.25</p></div>
-        <span style="font-family:var(--font-voice);font-size:34px;font-weight:500;font-variant-numeric:tabular-nums;" data-summary="spentWithTax">0</span>
+        <span style="font-family:var(--font-voice);font-size:60px;line-height:1.1;font-weight:500;font-variant-numeric:tabular-nums;" data-summary="spentWithTax">0</span>
       </div>
     </div>`;
 }
@@ -311,7 +322,7 @@ async function wireSlide(p, history) {
       plugins: window.ChartDataLabels ? [window.ChartDataLabels] : [],
       options: {
         responsive: true, maintainAspectRatio: false,
-        layout: { padding: { top: 24 } },
+        layout: { padding: { top: 44 } },
         animation: {
           delay: (ctx) => ctx.type === "data" && ctx.mode === "default" ? ctx.dataIndex * 180 : 0
         },
@@ -320,12 +331,14 @@ async function wireSlide(p, history) {
           tooltip: { callbacks: { label: (c) => fmt(metric, c.parsed.y) } },
           datalabels: {
             anchor: "end", align: "top", offset: 4,
-            color: labelColor, font: { size: 12, weight: "600" },
+            color: labelColor,
+            // Only the current report's bar gets a large label.
+            font: (ctx) => ({ size: years[ctx.dataIndex] === latestYear ? 30 : 11, weight: "600" }),
             formatter: (v) => fmtCompact(metric, v)
           }
         },
         scales: {
-          y: { suggestedMax: maxVal * 1.18, ticks: { callback: (v) => fmtCompact(metric, v), font: { size: 10 } }, grid: { color: isDark ? "#333" : "#e1e0d9" } },
+          y: { suggestedMax: maxVal * 1.25, ticks: { callback: (v) => fmtCompact(metric, v), font: { size: 10 } }, grid: { color: isDark ? "#333" : "#e1e0d9" } },
           x: { grid: { display: false }, ticks: { font: { size: 10 } } }
         }
       }
